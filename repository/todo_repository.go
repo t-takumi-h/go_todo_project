@@ -11,7 +11,7 @@ type TodoRepository interface{
 	GetTodos() (todos []entity.TodoEntity, err error)
 	InsertTodo(todo entity.TodoEntity) (id ulid.ULID, err error)
 	UpdateTodo(todo entity.TodoEntity) (err error)
-	DeleteTodo(id int) (err error)
+	DeleteTodo(id ulid.ULID) (err error)
 }
 
 type memoryTodoRepository struct{
@@ -40,7 +40,7 @@ func (tr *memoryTodoRepository) UpdateTodo(todo entity.TodoEntity) (err error) {
 	return nil
 } 
 
-func (tr *memoryTodoRepository) DeleteTodo(id int) (err error) {
+func (tr *memoryTodoRepository) DeleteTodo(id ulid.ULID) (err error) {
 	return nil
 } 
 
@@ -82,9 +82,19 @@ func (tr *todoRepository) InsertTodo(todo entity.TodoEntity) (id ulid.ULID, err 
 }
 
 func (tr *todoRepository) UpdateTodo(todo entity.TodoEntity) (err error) {
+	cmd := fmt.Sprintf("UPDATE %s SET title = ?, is_complited = ? WHERE id = ?", TableNameTodos)
+	_, err = DbConnection.Exec(cmd, todo.Title, todo.IsComplited, todo.Id)
+	if err != nil {
+		return err
+	}
 	return nil
 } 
 
-func (tr *todoRepository) DeleteTodo(id int) (err error) {
+func (tr *todoRepository) DeleteTodo(id ulid.ULID) (err error) {
+	cmd := fmt.Sprintf("DELETE FROM %s WHERE id = ?", TableNameTodos)
+	_, err = DbConnection.Exec(cmd, id)
+	if err != nil {
+		return err
+	}
 	return nil
 } 

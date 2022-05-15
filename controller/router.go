@@ -33,7 +33,11 @@ func (ro *router) handleTodosRequest(w http.ResponseWriter, r *http.Request){
 	case prefix + "get-todos":
 		ro.tc.GetTodos(w, r)
 	case prefix + "add-todo":
-		ro.tc.PostTodo(w, r)
+		ro.tc.AddTodo(w, r)
+	case prefix + "edit-todo":
+		ro.tc.EditTodo(w, r)
+	case prefix + "delete-todo":
+		ro.tc.DeleteTodo(w, r)
 	default:
 		w.WriteHeader(405)
 	}

@@ -78,7 +78,7 @@ func (tr *todoRepository) InsertTodo(todo entity.TodoEntity) (id ulid.ULID, err 
 	if err != nil {
 		return ulid, err
 	}
-	return entity.GenerateUlid(), nil
+	return ulid, nil
 }
 
 func (tr *todoRepository) UpdateTodo(todo entity.TodoEntity) (err error) {

@@ -13,7 +13,7 @@ const (
 	secretKey = "testSecretKey"
 )
 
-var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
+var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
@@ -28,10 +28,10 @@ var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reque
 	w.Write([]byte(tokenString))
 })
 
-func checkTokenFromHeader(r *http.Request) (*jwt.Token, error){
+func checkTokenFromHeader(r *http.Request) (*jwt.Token, error) {
 	auth := r.Header.Get("Authorization")
 	tokenString := strings.TrimPrefix(auth, "Bearer ")
-	fmt.Println("test1",tokenString)
+	fmt.Println("test1", tokenString)
 	verifyToken, err := verifyToken(tokenString)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func checkTokenFromHeader(r *http.Request) (*jwt.Token, error){
 	return verifyToken, nil
 }
 
-func verifyToken(tokenString string) (*jwt.Token, error){
+func verifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})

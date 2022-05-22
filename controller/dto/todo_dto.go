@@ -7,12 +7,12 @@ import (
 )
 
 type TodoResponse struct {
-	Id string `json:"id"`
-	Title string `json:"title"`
-	IsComplited bool `json:"is_complited"`
+	Id          string `json:"id"`
+	Title       string `json:"title"`
+	IsComplited bool   `json:"is_complited"`
 }
 
-func (todoResponse *TodoResponse) ComvertTodoEntity() (todoEntity entity.TodoEntity, err error){
+func (todoResponse *TodoResponse) ComvertTodoEntity() (todoEntity entity.TodoEntity, err error) {
 	var id ulid.ULID
 	if todoResponse.Id != "" {
 		id, err = ulid.ParseStrict(todoResponse.Id)
@@ -23,16 +23,14 @@ func (todoResponse *TodoResponse) ComvertTodoEntity() (todoEntity entity.TodoEnt
 	return entity.TodoEntity{Id: id, Title: todoResponse.Title, IsComplited: todoResponse.IsComplited}, nil
 }
 
-
-type TodosResponse struct{
+type TodosResponse struct {
 	Todos []TodoResponse `json:"todos"`
 }
 
-func ComvertTodosResponse(todos []entity.TodoEntity) TodosResponse{
+func ComvertTodosResponse(todos []entity.TodoEntity) TodosResponse {
 	var todoResponses []TodoResponse
 	for _, v := range todos {
 		todoResponses = append(todoResponses, TodoResponse{Id: v.Id.String(), Title: v.Title, IsComplited: v.IsComplited})
 	}
 	return TodosResponse{Todos: todoResponses}
 }
-

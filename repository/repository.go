@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"goTodoProject/config"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -17,7 +18,7 @@ func init() {
 	var err error
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", config.Config.SQLUsername, config.Config.SQLPassword, config.Config.SQLAddress, config.Config.DbName)
 	DbConnection, err = sql.Open(config.Config.SQLDriver, dsn)
-	if err != nil{
+	if err != nil {
 		fmt.Printf("Fail to open DB: %v", err)
 		return
 	}

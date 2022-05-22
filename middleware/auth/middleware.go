@@ -5,11 +5,10 @@ import (
 	"net/http"
 )
 
-
 func MiddlewareAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := checkTokenFromHeader(r)
-		if err != nil{
+		if err != nil {
 			fmt.Println("token err")
 			return
 		}

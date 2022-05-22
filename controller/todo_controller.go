@@ -16,7 +16,7 @@ type TodoController interface {
 	DeleteTodo(w http.ResponseWriter, r *http.Request)
 }
 
-type todoController struct{
+type todoController struct {
 	tr repository.TodoRepository
 }
 
@@ -24,7 +24,7 @@ func NewTodoController(tr repository.TodoRepository) TodoController {
 	return &todoController{tr}
 }
 
-func (tc *todoController) GetTodos(w http.ResponseWriter, r *http.Request){
+func (tc *todoController) GetTodos(w http.ResponseWriter, r *http.Request) {
 	todos, err := tc.tr.GetTodos()
 	if err != nil {
 		w.WriteHeader(500)
@@ -39,10 +39,10 @@ func (tc *todoController) GetTodos(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	w.Write(output)
-	
+
 }
 
-func (tc *todoController) AddTodo(w http.ResponseWriter, r *http.Request){
+func (tc *todoController) AddTodo(w http.ResponseWriter, r *http.Request) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
 	var todoRequest dto.TodoResponse
@@ -68,7 +68,7 @@ func (tc *todoController) AddTodo(w http.ResponseWriter, r *http.Request){
 	w.Write(output)
 }
 
-func (tc *todoController) EditTodo(w http.ResponseWriter, r *http.Request){
+func (tc *todoController) EditTodo(w http.ResponseWriter, r *http.Request) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
 	var todoRequest dto.TodoResponse
@@ -94,7 +94,7 @@ func (tc *todoController) EditTodo(w http.ResponseWriter, r *http.Request){
 	w.Write(output)
 }
 
-func (tc *todoController) DeleteTodo(w http.ResponseWriter, r *http.Request){
+func (tc *todoController) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)
 	var todoRequest dto.TodoResponse
@@ -111,7 +111,7 @@ func (tc *todoController) DeleteTodo(w http.ResponseWriter, r *http.Request){
 		w.WriteHeader(500)
 		return
 	}
-	result := struct{
+	result := struct {
 		Result string `json:"result"`
 	}{
 		Result: "ok",

@@ -15,7 +15,7 @@ type Router interface {
 	Routing()
 }
 
-type router struct{
+type router struct {
 	tc TodoController
 }
 
@@ -23,23 +23,22 @@ func NewRouter(tc TodoController) Router {
 	return &router{tc}
 }
 
-func (ro *router) Routing(){
+func (ro *router) Routing() {
 	http.HandleFunc("/home/", homeHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/get-token", auth.GetTokenHandler)
 	http.Handle("/todos/", auth.MiddlewareAuth(http.HandlerFunc(ro.handleTodosRequest)))
-	
+
 }
 
-
-func (ro *router) handleTodosRequest(w http.ResponseWriter, r *http.Request){
+func (ro *router) handleTodosRequest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("ORIGIN"))
 	w.Header().Set("Content-Type", "application/json")
-	
+
 	prefix := "/todos/"
 
-	switch r.URL.Path{
+	switch r.URL.Path {
 	case prefix + "get-todos":
 		ro.tc.GetTodos(w, r)
 	case prefix + "add-todo":
@@ -53,12 +52,12 @@ func (ro *router) handleTodosRequest(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request){
+func homeHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("view/test.html")
 	t.Execute(w, nil)
 }
 
-func loginHandler(w http.ResponseWriter, r *http.Request){
+func loginHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	for key, value := range r.Form {
 		fmt.Printf("Key:%s, Value:%s\n", key, value)

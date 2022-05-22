@@ -7,18 +7,18 @@ import (
 	"github.com/oklog/ulid/v2"
 )
 
-type TodoRepository interface{
+type TodoRepository interface {
 	GetTodos() (todos []entity.TodoEntity, err error)
 	InsertTodo(todo entity.TodoEntity) (id ulid.ULID, err error)
 	UpdateTodo(todo entity.TodoEntity) (err error)
 	DeleteTodo(id ulid.ULID) (err error)
 }
 
-type memoryTodoRepository struct{
+type memoryTodoRepository struct {
 	todos []entity.TodoEntity
 }
 
-func NewMemoryTodoRepository() TodoRepository{
+func NewMemoryTodoRepository() TodoRepository {
 	var todos []entity.TodoEntity
 	todos = append(todos, entity.TodoEntity{Id: entity.GenerateUlid(), Title: "test1-1", IsComplited: false})
 	todos = append(todos, entity.TodoEntity{Id: entity.GenerateUlid(), Title: "test2-2", IsComplited: true})
@@ -29,7 +29,7 @@ func NewMemoryTodoRepository() TodoRepository{
 
 func (tr *memoryTodoRepository) GetTodos() (todos []entity.TodoEntity, err error) {
 	return tr.todos, nil
-} 
+}
 
 func (tr *memoryTodoRepository) InsertTodo(todo entity.TodoEntity) (id ulid.ULID, err error) {
 	tr.todos = append(tr.todos, todo)
@@ -38,27 +38,27 @@ func (tr *memoryTodoRepository) InsertTodo(todo entity.TodoEntity) (id ulid.ULID
 
 func (tr *memoryTodoRepository) UpdateTodo(todo entity.TodoEntity) (err error) {
 	return nil
-} 
+}
 
 func (tr *memoryTodoRepository) DeleteTodo(id ulid.ULID) (err error) {
 	return nil
-} 
-
-type todoRepository struct{
 }
 
-func NewTodoRepository() TodoRepository{
+type todoRepository struct {
+}
+
+func NewTodoRepository() TodoRepository {
 	return &todoRepository{}
 }
 
 func (tr *todoRepository) GetTodos() (todos []entity.TodoEntity, err error) {
 	cmd := fmt.Sprintf("SELECT id, title, is_complited FROM %s ORDER BY id DESC", TableNameTodos)
 	rows, err := DbConnection.Query(cmd)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	
+
 	todos = []entity.TodoEntity{}
 
 	for rows.Next() {
@@ -69,7 +69,7 @@ func (tr *todoRepository) GetTodos() (todos []entity.TodoEntity, err error) {
 		todos = append(todos, todo)
 	}
 	return todos, nil
-} 
+}
 
 func (tr *todoRepository) InsertTodo(todo entity.TodoEntity) (id ulid.ULID, err error) {
 	ulid := entity.GenerateUlid()
@@ -88,7 +88,7 @@ func (tr *todoRepository) UpdateTodo(todo entity.TodoEntity) (err error) {
 		return err
 	}
 	return nil
-} 
+}
 
 func (tr *todoRepository) DeleteTodo(id ulid.ULID) (err error) {
 	cmd := fmt.Sprintf("DELETE FROM %s WHERE id = ?", TableNameTodos)
@@ -97,4 +97,4 @@ func (tr *todoRepository) DeleteTodo(id ulid.ULID) (err error) {
 		return err
 	}
 	return nil
-} 
+}
